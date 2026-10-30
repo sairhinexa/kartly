@@ -1,6 +1,6 @@
 # Kartly -- security training target.
-# Build:  docker build -t kartly-lab .
-# Run:    docker run --rm -p 127.0.0.1:5000:5000 kartly-lab
+# Build:  docker build -t kartly .
+# Run:    docker run --rm -p 127.0.0.1:5000:5000 kartly
 # (compose keeps it bound to localhost; never expose it to a network)
 FROM python:3.12-slim
 
