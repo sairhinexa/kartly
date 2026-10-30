@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="hero">
+  <img src="{{ url_for('static', filename='images/hero.jpg') }}" alt="">
+  <div class="hero-overlay"></div>
+  <div class="hero-content">
+    {% if welcome %}<p style="opacity:.85;margin-bottom:6px">Welcome back 👋</p>{% endif %}
+    <h1>Everything you love, delivered.</h1>
+    <p>Thousands of products from trusted sellers — with free returns within 30 days.</p>
+    <a class="btn" href="{{ url_for('market.products') }}">Shop now</a>
+  </div>
+</section>
+
+<div class="promos">
+  <div class="promo"><h3>Free delivery</h3><p>On all orders over $35, every day.</p></div>
+  <div class="promo"><h3>30-day returns</h3><p>Changed your mind? Send it back, free.</p></div>
+  <div class="promo"><h3>Trusted sellers</h3><p>Every seller verified by Kartly.</p></div>
+</div>
+
+<div class="section-head">
+  <h2>Featured products</h2>
+  <a href="{{ url_for('market.products') }}">View all →</a>
+</div>
+<div class="grid">
+  {% for p in featured %}{% include "_card.html" %}{% endfor %}
+</div>
+{% endblock %}

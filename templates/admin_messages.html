@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block title %}Support inbox — Kartly Admin{% endblock %}
+{% block content %}
+<div class="section-head"><h2>Support inbox</h2></div>
+<div class="page-panel">
+  <table class="table">
+    <thead><tr><th>Date</th><th>From</th><th>Email</th><th>Message</th></tr></thead>
+    <tbody>
+      {% for m in msgs %}
+      <tr>
+        <td style="white-space:nowrap">{{ m['created'] }}</td>
+        <td>{{ m['name'] }}</td>
+        <td>{{ m['email'] }}</td>
+        {# *** VULNERABLE: message body rendered unsanitised -> blind/stored XSS *** #}
+        <td>{{ m['body']|safe }}</td>
+      </tr>
+      {% else %}
+      <tr><td colspan="4" class="muted">No messages.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

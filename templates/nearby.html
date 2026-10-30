@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block title %}Shoppers near you — Kartly{% endblock %}
+{% block content %}
+<div class="section-head"><h2>Shoppers near you</h2></div>
+<p class="muted" style="margin-bottom:14px">Based on your city: <strong>{{ city or 'not set' }}</strong>
+   (<a href="{{ url_for('market.profile') }}">change</a>)</p>
+
+{% if error %}<pre class="dberror">{{ error }}</pre>{% endif %}
+<div class="page-panel">
+  <table class="table">
+    <thead><tr><th>Shopper</th><th>City</th></tr></thead>
+    <tbody>
+      {% for row in results %}
+        <tr>{% for cell in row %}<td>{{ cell }}</td>{% endfor %}</tr>
+      {% else %}
+        <tr><td colspan="2" class="muted">No other shoppers in your city yet.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block title %}Page not found — Kartly{% endblock %}
+{% block content %}
+<div class="errpage">
+  <div class="errcode">404</div>
+  <h1>We can't find that page</h1>
+  <p class="muted">The page you're looking for may have been moved, sold out, or never existed.</p>
+  <div class="erractions">
+    <a class="btn" href="{{ url_for('market.home') }}">Back to home</a>
+    <a class="btn ghost" href="{{ url_for('market.products') }}">Browse products</a>
+  </div>
+</div>
+{% endblock %}

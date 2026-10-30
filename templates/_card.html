@@ -1,0 +1,20 @@
+<div class="card">
+  <a class="card-media" href="{{ url_for('market.product', pid=p['id']) }}">
+    {% if not p['released'] %}<span class="badge">Preview</span>{% elif p['id'] % 4 == 0 %}<span class="badge sale">Sale</span>{% endif %}
+    <img src="{{ url_for('static', filename='images/p' ~ p['id'] ~ '.jpg') }}" alt="{{ p['name'] }}" loading="lazy">
+  </a>
+  <div class="card-body">
+    <span class="card-cat">{{ p['category'] }}</span>
+    <a href="{{ url_for('market.product', pid=p['id']) }}"><span class="card-name">{{ p['name'] }}</span></a>
+    <span class="stars">★★★★<span style="color:#dfe3ea">★</span><span class="count">({{ p['id'] * 13 + 7 }})</span></span>
+    <div class="card-foot">
+      <span class="price">${{ '%.2f'|format(p['price']) }}{% if p['id'] % 4 == 0 %}<span class="was">${{ '%.2f'|format(p['price'] * 1.25) }}</span>{% endif %}</span>
+      <form method="post" action="{{ url_for('market.cart_add') }}">
+        <input type="hidden" name="product_id" value="{{ p['id'] }}">
+        <input type="hidden" name="price" value="{{ '%.2f'|format(p['price']) }}">
+        <input type="hidden" name="qty" value="1">
+        <button class="addmini" type="submit">Add</button>
+      </form>
+    </div>
+  </div>
+</div>

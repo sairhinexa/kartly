@@ -1,0 +1,12 @@
+.git/
+.dbs/
+var/
+etc/
+secret/
+webroot/
+__pycache__/
+*/__pycache__/
+*.pyc
+*.zip
+*.log
+.bb-profile/

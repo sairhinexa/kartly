@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block title %}Sell on Kartly — Supplier Hub{% endblock %}
+{% block content %}
+<div class="page-panel" style="max-width:640px;margin:0 auto">
+  <h1 class="page-title">Supplier Hub</h1>
+  <p class="muted" style="margin-bottom:18px">Verify a product reference against the Kartly supplier catalogue before listing it in your store.</p>
+  <form method="get" action="{{ url_for('market.supplier_lookup') }}" class="formrow">
+    <input type="text" name="ref" placeholder="Product reference" value="{{ ref or '' }}" style="flex:1;min-width:220px">
+    <button class="btn" type="submit">Verify</button>
+  </form>
+  {% if ref is not none %}
+    {% if located %}
+      <div class="notice ok" style="margin-top:18px">Reference {{ ref }} is verified and ready to list.</div>
+    {% else %}
+      <div class="notice err" style="margin-top:18px">No matching supplier reference was found.</div>
+    {% endif %}
+  {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block title %}Payment methods — Kartly{% endblock %}
+{% block content %}
+<div class="section-head"><h2>Payment methods</h2></div>
+
+{% if target != me %}
+<div class="notice ok">Viewing saved cards for
+  {{ owner['full_name'] if owner else 'user #' ~ target }} (account #{{ target }}).</div>
+{% endif %}
+
+<div class="page-panel" style="margin-bottom:22px">
+  {% if cards %}
+  <table class="table">
+    <thead><tr><th>Cardholder</th><th>Brand</th><th>Card number</th><th>Expiry</th><th>CVV</th></tr></thead>
+    <tbody>
+      {% for c in cards %}
+      <tr>
+        <td>{{ c['cardholder'] }}</td>
+        <td>{{ c['brand'] }}</td>
+        <td>{{ c['number'] }}</td>
+        <td>{{ c['expiry'] }}</td>
+        <td>{{ c['cvv'] }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+  <p class="muted">No saved cards.</p>
+  {% endif %}
+</div>
+
+<div class="page-panel" style="max-width:520px">
+  <h3 style="margin-bottom:14px">Add a card</h3>
+  <form method="post" action="{{ url_for('market.wallet_add') }}" style="display:grid;gap:12px">
+    <input name="cardholder" placeholder="Cardholder name" style="padding:11px;border:1.5px solid var(--line);border-radius:11px">
+    <input name="number" placeholder="Card number" style="padding:11px;border:1.5px solid var(--line);border-radius:11px">
+    <div class="formrow">
+      <input name="expiry" placeholder="MM/YY" style="flex:1">
+      <input name="cvv" placeholder="CVV" style="flex:1">
+      <select name="brand"><option>Visa</option><option>Mastercard</option><option>Amex</option></select>
+    </div>
+    <button class="btn" type="submit">Save card</button>
+  </form>
+  <p class="muted" style="margin-top:10px">For testing, use a test card number such as 4242 4242 4242 4242.</p>
+</div>
+{% endblock %}

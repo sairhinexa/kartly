@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block title %}Your basket — Kartly{% endblock %}
+{% block content %}
+<div class="section-head"><h2>Your basket</h2></div>
+{% if notice %}<div class="notice ok">{{ notice }}</div>{% endif %}
+{% if items %}
+<div class="page-panel">
+  <table class="table">
+    <thead><tr><th>Product</th><th>Unit price</th><th>Qty</th><th>Line total</th><th></th></tr></thead>
+    <tbody>
+      {% for it in items %}
+      <tr>
+        <td>{{ it.name }}</td>
+        <td>${{ '%.2f'|format(it.price) }}</td>
+        <td>
+          <form method="post" action="{{ url_for('market.cart_update') }}" class="formrow">
+            <input type="hidden" name="idx" value="{{ loop.index0 }}">
+            <input type="number" name="qty" value="{{ it.qty }}" style="width:70px">
+            <button class="addmini" type="submit">Update</button>
+          </form>
+        </td>
+        <td>${{ '%.2f'|format(it.price * it.qty) }}</td>
+        <td><a href="{{ url_for('market.cart_remove', idx=loop.index0) }}" class="muted">Remove</a></td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <div style="display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:20px;margin-top:22px">
+    <form method="post" action="{{ url_for('market.cart_coupon') }}" class="formrow">
+      <input type="text" name="code" placeholder="Discount code">
+      <button class="btn ghost" type="submit">Apply</button>
+      {% if discount %}<span class="muted">Applied: −{{ (discount*100)|int }}%</span>{% endif %}
+    </form>
+    <div style="text-align:right">
+      <div class="muted">Subtotal: ${{ '%.2f'|format(subtotal) }}</div>
+      {% if discount %}<div class="muted">Discount: −${{ '%.2f'|format(subtotal*discount) }}</div>{% endif %}
+      <div style="font-size:1.5rem;font-weight:800;margin:6px 0">Total: ${{ '%.2f'|format(total) }}</div>
+      <a class="btn" href="{{ url_for('market.checkout') }}">Checkout</a>
+    </div>
+  </div>
+</div>
+{% else %}
+<div class="panel"><p class="muted">Your basket is empty. <a href="{{ url_for('market.products') }}">Start shopping →</a></p></div>
+{% endif %}
+{% endblock %}

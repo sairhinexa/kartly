@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block title %}Change email — Kartly{% endblock %}
+{% block content %}
+<div class="page-panel" style="max-width:480px;margin:0 auto">
+  <h1 class="page-title">Change email address</h1>
+  {% if updated %}<div class="notice ok">Your email address has been updated.</div>{% endif %}
+  <p class="muted" style="margin-bottom:16px">Current: {{ user['email'] }}</p>
+  <form method="post" action="{{ url_for('market.account_email') }}">
+    <label class="muted">New email address</label>
+    <input type="email" name="email" style="width:100%;padding:12px;border:1.5px solid var(--line);border-radius:11px;margin:6px 0 16px">
+    <button class="btn block" type="submit">Update email</button>
+  </form>
+</div>
+{% endblock %}

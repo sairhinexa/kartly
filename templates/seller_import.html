@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block title %}Import product image — Kartly Seller Hub{% endblock %}
+{% block content %}
+<div class="page-panel" style="max-width:640px;margin:0 auto">
+  <h1 class="page-title">Import product image</h1>
+  <p class="muted" style="margin-bottom:16px">Paste the URL of your product image and we'll fetch and attach it to your listing.</p>
+  <form method="get" action="{{ url_for('market.seller_import') }}" class="formrow">
+    <input type="text" name="url" placeholder="https://…/image.jpg" value="{{ url or '' }}" style="flex:1;min-width:260px">
+    <button class="btn" type="submit">Fetch</button>
+  </form>
+  {% if fetched is not none %}
+    <h3 style="margin:20px 0 8px">Preview</h3>
+    <pre class="dberror">{{ fetched }}</pre>
+  {% endif %}
+</div>
+{% endblock %}

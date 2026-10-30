@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block title %}Profile — Kartly{% endblock %}
+{% block content %}
+<div class="auth" style="max-width:480px">
+  <h1>Your profile</h1>
+  {% if saved %}<div class="notice ok">Profile updated.</div>{% endif %}
+  <p class="muted" style="margin-bottom:8px">Tell us your city so we can show you shoppers and deals near you.</p>
+  <form method="post" action="{{ url_for('market.profile') }}">
+    <label>City</label>
+    <input type="text" name="city" value="{{ user['city'] or '' }}"
+           style="width:100%;padding:11px;border:1.5px solid var(--line);border-radius:11px;margin:6px 0 16px">
+    <button class="btn block" type="submit">Save profile</button>
+  </form>
+  <p class="alt"><a href="{{ url_for('market.nearby') }}">See shoppers near you →</a></p>
+</div>
+{% endblock %}

@@ -1,0 +1,13 @@
+# Kartly -- security training target.
+# Start:  docker compose up --build
+# Open:   http://127.0.0.1:5000/
+#
+# The port is deliberately published only on 127.0.0.1 so the app
+# is not reachable from your network. Do not change this to 0.0.0.0.
+services:
+  kartly:
+    build: .
+    container_name: kartly-lab
+    ports:
+      - "127.0.0.1:5000:5000"
+    restart: "no"

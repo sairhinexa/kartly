@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block title %}{{ selected or 'All products' }} — Kartly{% endblock %}
+{% block content %}
+<div class="breadcrumb"><a href="{{ url_for('market.home') }}">Home</a> › {{ selected or 'All products' }}</div>
+<div class="section-head"><h2>{{ selected or 'All products' }}</h2></div>
+
+{% if error %}<pre class="dberror">{{ error }}</pre>{% endif %}
+
+{% if results is not none %}
+  {% if results %}
+  <div class="grid">
+    {% for p in results %}
+    <div class="card">
+      <div class="card-media">
+        <img src="{{ url_for('static', filename='images/p' ~ p.id ~ '.jpg') }}" alt="" loading="lazy"
+             onerror="this.style.opacity=0">
+      </div>
+      <div class="card-body">
+        <span class="card-cat">{{ selected }}</span>
+        {% if p.id is number %}<a href="{{ url_for('market.product', pid=p.id) }}"><span class="card-name">{{ p.name }}</span></a>
+        {% else %}<span class="card-name">{{ p.name }}</span>{% endif %}
+        {% if p.description %}<span class="muted" style="font-size:.85rem">{{ p.description }}</span>{% endif %}
+        <div class="card-foot">
+          <span class="price">{% if p.price is number %}${{ '%.2f'|format(p.price) }}{% else %}{{ p.price }}{% endif %}</span>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+  {% else %}
+  <div class="panel"><p class="muted">No products found in this category.</p></div>
+  {% endif %}
+  <p style="margin-top:16px"><a href="{{ url_for('market.products') }}">← Back to all products</a></p>
+{% else %}
+  <div class="grid">{% for p in cards %}{% include "_card.html" %}{% endfor %}</div>
+{% endif %}
+{% endblock %}

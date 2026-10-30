@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block title %}Live support — Kartly{% endblock %}
+{% block content %}
+<div class="section-head"><h2>Live support chat</h2></div>
+<div class="page-panel" style="max-width:640px">
+  <div id="chat" style="height:300px;overflow-y:auto;border:1px solid var(--line);border-radius:12px;padding:14px;margin-bottom:14px;background:#fafbfd"></div>
+  <form id="chatForm" class="formrow">
+    <input id="msg" placeholder="Type your message…" style="flex:1;min-width:220px" autocomplete="off">
+    <button class="btn" type="submit">Send</button>
+  </form>
+</div>
+<script>
+  var chat = document.getElementById('chat');
+  var proto = location.protocol === 'https:' ? 'wss' : 'ws';
+  var ws = new WebSocket(proto + '://' + location.host + '/ws/support');
+  function add(html){ var d=document.createElement('div'); d.style.margin='6px 0'; d.innerHTML = html; chat.appendChild(d); chat.scrollTop=chat.scrollHeight; }
+  ws.onopen = () => add('<em class="muted">Connected to Kartly support…</em>');
+  ws.onmessage = e => add(e.data);
+  document.getElementById('chatForm').addEventListener('submit', function(ev){
+    ev.preventDefault();
+    var m = document.getElementById('msg').value;
+    if(m){ ws.send(m); document.getElementById('msg').value=''; }
+  });
+</script>
+{% endblock %}

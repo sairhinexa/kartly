@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block title %}Contact support — Kartly{% endblock %}
+{% block content %}
+<div class="auth" style="max-width:520px">
+  <h1>Contact support</h1>
+  {% if sent %}
+    <div class="notice ok">Thanks — our team will get back to you shortly.</div>
+  {% endif %}
+  <p class="muted" style="margin-bottom:8px">Send us a message and our support team will take a look.</p>
+  <form method="post" action="{{ url_for('market.contact') }}">
+    <label>Your name</label>
+    <input type="text" name="name" style="width:100%;padding:11px;border:1.5px solid var(--line);border-radius:11px;margin-bottom:10px">
+    <label>Email</label>
+    <input type="text" name="email" style="width:100%;padding:11px;border:1.5px solid var(--line);border-radius:11px;margin-bottom:10px">
+    <label>Message</label>
+    <textarea name="body" rows="4" style="width:100%;padding:11px;border:1.5px solid var(--line);border-radius:11px"></textarea>
+    <button class="btn block" type="submit" style="margin-top:14px">Send message</button>
+  </form>
+</div>
+{% endblock %}

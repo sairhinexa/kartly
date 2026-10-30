@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block title %}Deals — Kartly{% endblock %}
+{% block content %}
+<div class="section-head"><h2 id="dealsHeading">Today's deals</h2></div>
+<script>
+  var cat = new URLSearchParams(location.search).get('cat');
+  if (cat) { document.getElementById('dealsHeading').innerHTML = "Today's deals in " + cat; }
+</script>
+<div class="promos">
+  <div class="promo"><h3>Up to 25% off</h3><p>Selected electronics this week only.</p></div>
+  <div class="promo"><h3>Buy one get one</h3><p>On toys &amp; games.</p></div>
+  <div class="promo"><h3>Clearance</h3><p>Last chance on lifestyle picks.</p></div>
+</div>
+<div class="grid">{% for p in products %}{% include "_card.html" %}{% endfor %}</div>
+{% endblock %}

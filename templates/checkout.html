@@ -1,0 +1,111 @@
+{% extends "base.html" %}
+{% block title %}Checkout — Kartly{% endblock %}
+{% block content %}
+{% if placed %}
+<div class="page-panel" style="max-width:560px;margin:0 auto;text-align:center">
+  <div style="font-size:3rem;line-height:1">🎉</div>
+  <h1 class="page-title">Order confirmed</h1>
+  <p>Thanks{% if user %}, {{ user['full_name'] or user['username'] }}{% endif %}! Your order
+     <strong>{{ reference }}</strong> has been placed.</p>
+  <p style="font-size:1.6rem;font-weight:800;margin:14px 0">Charged: ${{ '%.2f'|format(total) }}</p>
+  <p class="muted">A confirmation and invoice are available below.</p>
+  <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:18px">
+    <a class="btn" href="{{ url_for('market.invoice_pdf', ref=reference) }}">Download invoice (PDF)</a>
+    <a class="btn ghost" href="{{ url_for('market.products') }}">Continue shopping</a>
+  </div>
+</div>
+{% else %}
+<div class="section-head"><h2>Checkout</h2></div>
+<form method="post" action="{{ url_for('market.checkout') }}">
+<div style="display:grid;grid-template-columns:1.4fr 1fr;gap:24px;align-items:start">
+
+  <div style="display:flex;flex-direction:column;gap:20px;min-width:0">
+    <div class="page-panel">
+      <h3 style="margin-top:0">Shipping address</h3>
+      <label class="field">Full name
+        <input type="text" name="ship_name" value="{{ user['full_name'] if user else '' }}" required>
+      </label>
+      <label class="field">Address
+        <input type="text" name="ship_addr" value="{{ user['address'] if user else '' }}" required>
+      </label>
+      <div style="display:flex;gap:14px;flex-wrap:wrap">
+        <label class="field" style="flex:1;min-width:140px">City
+          <input type="text" name="ship_city">
+        </label>
+        <label class="field" style="flex:1;min-width:120px">Postcode
+          <input type="text" name="ship_zip">
+        </label>
+      </div>
+    </div>
+
+    <div class="page-panel">
+      <h3 style="margin-top:0">Payment</h3>
+
+      <div class="paymethods">
+        <label class="payopt"><input type="radio" name="pay_method" value="card" checked> Pay by card</label>
+        <label class="payopt{% if not cod_available %} disabled{% endif %}">
+          <input type="radio" name="pay_method" value="cod"{% if not cod_available %} disabled{% endif %}>
+          Cash on Delivery
+          {% if not cod_available %}<span class="muted"> — available on orders under ${{ '%.0f'|format(cod_max) }}</span>{% endif %}
+        </label>
+      </div>
+
+      <div id="card-fields">
+        <label class="field">Card number
+          <input type="text" name="card_number" inputmode="numeric" autocomplete="cc-number"
+                 placeholder="4242 4242 4242 4242" required>
+        </label>
+        <div style="display:flex;gap:14px;flex-wrap:wrap">
+          <label class="field" style="flex:1;min-width:120px">Expiry
+            <input type="text" name="card_expiry" placeholder="MM/YY" autocomplete="cc-exp">
+          </label>
+          <label class="field" style="flex:1;min-width:100px">CVV
+            <input type="text" name="card_cvv" inputmode="numeric" placeholder="123" autocomplete="cc-csc">
+          </label>
+        </div>
+        <label class="checkrow"><input type="checkbox" name="save_card" value="1"> Save this card for faster checkout</label>
+      </div>
+
+      <div id="cod-note" class="notice" style="display:none">
+        Pay with cash when your order is delivered. Please have the exact amount ready for the courier.
+      </div>
+    </div>
+  </div>
+
+  <div class="page-panel" style="position:sticky;top:90px">
+    <h3 style="margin-top:0">Order summary</h3>
+    <table class="table" style="margin-bottom:14px">
+      <tbody>
+        {% for it in items %}
+        <tr><td>{{ it.name }} × {{ it.qty }}</td>
+            <td style="text-align:right">${{ '%.2f'|format(it.price*it.qty) }}</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    <div class="muted" style="display:flex;justify-content:space-between"><span>Subtotal</span><span>${{ '%.2f'|format(subtotal) }}</span></div>
+    {% if discount %}<div class="muted" style="display:flex;justify-content:space-between"><span>Discount</span><span>−${{ '%.2f'|format(subtotal*discount) }}</span></div>{% endif %}
+    <div style="display:flex;justify-content:space-between;font-size:1.3rem;font-weight:800;margin:10px 0 16px"><span>Total</span><span>${{ '%.2f'|format(total) }}</span></div>
+    <button class="btn block" type="submit">Place order</button>
+    <p class="muted" style="font-size:.8rem;margin-top:10px">This is a training environment — do not enter a real card.</p>
+  </div>
+
+</div>
+</form>
+<script>
+(function(){
+  var card=document.getElementById('card-fields');
+  var cod=document.getElementById('cod-note');
+  var num=document.querySelector('input[name=card_number]');
+  function upd(){
+    var sel=document.querySelector('input[name=pay_method]:checked');
+    var isCard=!sel || sel.value==='card';
+    if(card) card.style.display=isCard?'':'none';
+    if(cod)  cod.style.display=isCard?'none':'';
+    if(num)  num.required=isCard;
+  }
+  document.querySelectorAll('input[name=pay_method]').forEach(function(r){r.addEventListener('change',upd);});
+  upd();
+})();
+</script>
+{% endif %}
+{% endblock %}

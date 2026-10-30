@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block title %}Create account — Kartly{% endblock %}
+{% block content %}
+<div class="auth">
+  <h1>Create your account</h1>
+  {% if error %}<div class="notice err">{{ error }}</div>{% endif %}
+  <form method="post" action="{{ url_for('market.register') }}">
+    <label>Username</label>
+    <input type="text" name="username" autocomplete="off" autofocus>
+    <label>Email</label>
+    <input type="email" name="email" autocomplete="off">
+    <label>Password</label>
+    <input type="password" name="password" autocomplete="off">
+    <button class="btn block" type="submit">Create account</button>
+  </form>
+  <p class="alt">Already have an account? <a href="{{ url_for('market.login') }}">Sign in</a></p>
+</div>
+{% endblock %}

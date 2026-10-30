@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block title %}Trending — Kartly{% endblock %}
+{% block content %}
+<div class="section-head"><h2>Trending now</h2></div>
+<div class="panel" style="margin-bottom:26px">
+  <div id="trendingBanner" class="muted">Popular with shoppers this week</div>
+  <script>
+    var term = new URLSearchParams(location.search).get('q') || 'everything';
+    document.write('<p style="margin:8px 0 0;font-weight:600">Showing trends for: ' + term + '</p>');
+  </script>
+</div>
+<div class="grid">{% for p in products %}{% include "_card.html" %}{% endfor %}</div>
+{% endblock %}

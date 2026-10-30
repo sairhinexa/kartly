@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block title %}Admin — Kartly{% endblock %}
+{% block content %}
+<div class="section-head"><h2>Admin console</h2></div>
+{% if notice %}<div class="notice ok">{{ notice }}</div>{% endif %}
+
+{% if memo %}
+<div class="page-panel" style="margin-bottom:22px;border-left:4px solid var(--brand)">
+  <h3 style="margin-bottom:8px">Internal memo</h3>
+  <p class="muted" style="margin:0">{{ memo }}</p>
+</div>
+{% endif %}
+
+<div class="page-panel" style="margin-bottom:22px">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
+    <h3 style="margin:0">Users</h3>
+    <div style="display:flex;gap:10px">
+      <a class="btn ghost" href="{{ url_for('market.admin_messages') }}">Support inbox</a>
+      <a class="btn ghost" href="{{ url_for('market.admin_export') }}">Export all users (JSON)</a>
+    </div>
+  </div>
+  <table class="table">
+    <thead><tr><th>ID</th><th>Username</th><th>Email</th><th>Role</th><th></th></tr></thead>
+    <tbody>
+      {% for u in users %}
+      <tr>
+        <td>{{ u['id'] }}</td><td>{{ u['username'] }}</td><td>{{ u['email'] }}</td><td>{{ u['role'] }}</td>
+        <td><a class="muted" href="{{ url_for('market.admin_delete', username=u['username']) }}">Delete</a></td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+<div class="page-panel">
+  <h3 style="margin-bottom:14px">Network diagnostics</h3>
+  <p class="muted" style="margin-bottom:12px">Check connectivity to a supplier host.</p>
+  <form method="post" action="{{ url_for('market.admin_diag') }}" class="formrow">
+    <input type="text" name="host" placeholder="host or IP" value="{{ host or '127.0.0.1' }}" style="flex:1;min-width:220px">
+    <button class="btn" type="submit">Ping</button>
+  </form>
+  {% if output %}<pre class="dberror" style="margin-top:14px">{{ output }}</pre>{% endif %}
+</div>
+{% endblock %}

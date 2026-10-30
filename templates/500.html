@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block title %}Something went wrong — Kartly{% endblock %}
+{% block content %}
+<div class="errpage">
+  <div class="errcode">500</div>
+  <h1>Something went wrong on our end</h1>
+  <p class="muted">We've hit an unexpected error. Please try again in a few moments.</p>
+  <div class="erractions">
+    <a class="btn" href="{{ url_for('market.home') }}">Back to home</a>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,9 @@
+# runtime (regenerated on each start)
+.dbs/
+var/
+etc/
+secret/
+webroot/
+__pycache__/
+*.pyc
+.env

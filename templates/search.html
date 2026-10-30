@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block title %}Search — Kartly{% endblock %}
+{% block content %}
+<div class="breadcrumb"><a href="{{ url_for('market.home') }}">Home</a> › Search</div>
+{# search term reflected into the page #}
+<div class="section-head"><h2>{{ rows|length }} results for "{{ q|safe }}"</h2></div>
+{% if rows %}
+  <div class="grid">{% for p in rows %}{% include "_card.html" %}{% endfor %}</div>
+{% else %}
+  <div class="panel"><p class="muted">We couldn't find anything matching "{{ q|safe }}". Try a different search.</p></div>
+{% endif %}
+{% endblock %}

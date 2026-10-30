@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% block title %}My account — Kartly{% endblock %}
+{% block content %}
+<div class="page-panel">
+  <div class="acct-head">
+    <img class="avatar-lg" src="{{ url_for('static', filename='images/avatar.jpg') }}" alt="">
+    <div>
+      <h1 class="page-title" style="margin:0">{{ user['full_name'] or user['username'] }}</h1>
+      <span class="muted">{{ user['email'] }}</span>
+    </div>
+  </div>
+
+  <div style="display:flex;gap:22px;flex-wrap:wrap;margin-bottom:26px;align-items:center">
+    <a class="btn ghost" href="{{ url_for('market.account_email') }}">Change email</a>
+    <a class="btn ghost" href="{{ url_for('market.profile') }}">Edit profile</a>
+    <a class="btn ghost" href="{{ url_for('market.wallet') }}">Payment methods</a>
+    <form method="post" action="{{ url_for('market.avatar_upload') }}" enctype="multipart/form-data" class="formrow">
+      <input type="file" name="avatar">
+      <button class="btn ghost" type="submit">Upload avatar</button>
+    </form>
+  </div>
+
+  <h2 style="font-size:1.25rem;margin-bottom:14px">Your orders</h2>
+  {% if orders %}
+  <table class="table">
+    <thead><tr><th>Order</th><th>Total</th><th>Status</th><th></th></tr></thead>
+    <tbody>
+      {% for o in orders %}
+      <tr>
+        <td>{{ o['reference'] }}</td>
+        <td>${{ '%.2f'|format(o['total']) }}</td>
+        <td>{{ o['status'] }}</td>
+        <td style="white-space:nowrap">
+          <a class="btn ghost" href="{{ url_for('market.invoice_view', ref=o['reference']) }}">View</a>
+          <a class="muted" style="margin-left:10px" href="{{ url_for('market.invoice_pdf', ref=o['reference']) }}">PDF</a>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+  <p class="muted">You have no orders yet.</p>
+  {% endif %}
+</div>
+{% endblock %}

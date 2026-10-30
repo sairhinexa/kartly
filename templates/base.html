@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Kartly — shop thousands of products from trusted sellers with fast delivery and free 30-day returns.">
+  <link rel="icon" href="{{ url_for('static', filename='favicon.svg') }}" type="image/svg+xml">
+  <title>{% block title %}Kartly — Online Marketplace{% endblock %}</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/lab.css') }}">
+</head>
+<body>
+  <!-- Kartly storefront build 3.4.1 (2026-10) -->
+  <!-- TODO(dev): remove before prod push - internal API key KARTLY_API_KEY=kly_live_7f3c9a2e8b1d4f60 (ops rotate monthly) -->
+  <header class="site-head">
+    <div class="head-row">
+      <a class="logo" href="{{ url_for('market.home') }}">Kartly<span class="dot">.</span></a>
+      <form class="searchbar" method="get" action="{{ url_for('market.search') }}">
+        <input type="text" name="q" placeholder="Search for products, brands and more…" value="{{ request.args.get('q','') }}">
+        <button type="submit">Search</button>
+      </form>
+      <div class="head-actions">
+        <a href="{{ url_for('market.deals') }}">Deals</a>
+        <a href="{{ url_for('market.cart') }}">🛒 <span>Cart</span></a>
+        {% if user %}
+          <a href="{{ url_for('market.account') }}">👤 <span>{{ user['username'] }}</span></a>
+          <a href="{{ url_for('market.logout') }}">Sign out</a>
+        {% else %}
+          <a class="pill" href="{{ url_for('market.login') }}">Sign in</a>
+        {% endif %}
+      </div>
+    </div>
+    <div class="catnav">
+      <div class="wrap">
+        <a href="{{ url_for('market.products') }}">All</a>
+        {% for c in categories %}<a href="{{ url_for('market.products', category=c) }}">{{ c }}</a>{% endfor %}
+        <a href="{{ url_for('market.trending') }}">Trending</a>
+      </div>
+    </div>
+  </header>
+
+  <main>{% block content %}{% endblock %}</main>
+
+  <footer class="site-foot">
+    <div class="wrap">
+      <div class="foot-cols">
+        <div>
+          <div class="foot-brand">Kartly<span style="color:var(--brand)">.</span></div>
+          <p style="color:#9fb0cc;font-size:.88rem;max-width:280px">Your everyday marketplace. Thousands of products from trusted sellers, delivered fast with free 30-day returns.</p>
+        </div>
+        <div>
+          <h4>Shop</h4>
+          <a href="{{ url_for('market.products') }}">All products</a>
+          <a href="{{ url_for('market.deals') }}">Today's deals</a>
+          <a href="{{ url_for('market.trending') }}">Trending</a>
+          <a href="{{ url_for('market.supplier_lookup') }}">Sell on Kartly</a>
+        </div>
+        <div>
+          <h4>Help</h4>
+          <a href="{{ url_for('market.help_doc') }}">Returns &amp; refunds</a>
+          <a href="#">Track your order</a>
+          <a href="{{ url_for('market.contact') }}">Contact support</a>
+          <a href="#">Delivery info</a>
+        </div>
+        <div>
+          <h4>Account</h4>
+          {% if user %}<a href="{{ url_for('market.account') }}">My account</a>
+          {% else %}<a href="{{ url_for('market.login') }}">Sign in</a>
+          <a href="{{ url_for('market.register') }}">Create account</a>{% endif %}
+          <a href="{{ url_for('market.cart') }}">Basket</a>
+        </div>
+      </div>
+      <div class="foot-bottom">
+        <span>© 2026 Kartly Marketplace Ltd. All rights reserved.</span>
+        <span>Privacy · Terms · Cookies</span>
+      </div>
+    </div>
+  </footer>
+  <div id="cookieBanner" class="cookie-banner" hidden>
+    <span>We use cookies to improve your experience, personalise content and measure traffic. See our <a href="#">cookie policy</a>.</span>
+    <div class="cookie-actions">
+      <button id="cookieReject" class="btn ghost">Reject non-essential</button>
+      <button id="cookieAccept" class="btn">Accept all</button>
+    </div>
+  </div>
+  <script>
+  (function(){
+    try{
+      if(!localStorage.getItem('kartly_cookie_choice')){
+        var b=document.getElementById('cookieBanner'); b.hidden=false;
+        var pick=function(v){try{localStorage.setItem('kartly_cookie_choice',v);}catch(e){} b.hidden=true;};
+        document.getElementById('cookieAccept').onclick=function(){pick('all');};
+        document.getElementById('cookieReject').onclick=function(){pick('essential');};
+      }
+    }catch(e){}
+  })();
+  </script>
+  {% block scripts %}{% endblock %}
+</body>
+</html>

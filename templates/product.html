@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% block title %}{{ p['name'] }} — Kartly{% endblock %}
+{% block content %}
+<div class="breadcrumb">
+  <a href="{{ url_for('market.home') }}">Home</a> ›
+  <a href="{{ url_for('market.products', category=p['category']) }}">{{ p['category'] }}</a> ›
+  {{ p['name'] }}
+</div>
+
+<div class="product">
+  <div class="gallery">
+    <img src="{{ url_for('static', filename='images/p' ~ p['id'] ~ '.jpg') }}" alt="{{ p['name'] }}">
+  </div>
+  <div class="pd-info">
+    <span class="pd-cat">{{ p['category'] }}</span>
+    <h1>{{ p['name'] }}</h1>
+    <span class="stars">★★★★<span style="color:#dfe3ea">★</span><span class="count">({{ p['id'] * 13 + 7 }} reviews)</span></span>
+    <div class="pd-price">${{ '%.2f'|format(p['price']) }}</div>
+    <p class="pd-desc">{{ p['description'] }}</p>
+    <div class="pd-stock">{{ p['stock'] }} in stock</div>
+    <form class="qtyrow" method="post" action="{{ url_for('market.cart_add') }}">
+      <input type="hidden" name="product_id" value="{{ p['id'] }}">
+      <input type="hidden" name="price" value="{{ '%.2f'|format(p['price']) }}">
+      <input type="number" name="qty" value="1" min="1">
+      <button class="btn" type="submit">Add to basket</button>
+    </form>
+    <p class="pd-links"><a href="{{ url_for('market.manual', pid=p['id'], file='aurora-earbuds.png') }}">↓ Download user manual</a></p>
+  </div>
+</div>
+
+<section class="panel">
+  <h2>Customer reviews</h2>
+  {% for r in reviews %}
+  <div class="review">
+    <div class="review-head">
+      <span class="avatar-sm">{{ r['author'][:1]|upper }}</span>
+      <span class="name">{{ r['author'] }}</span>
+      <span class="stars">{{ '★' * r['rating'] }}</span>
+    </div>
+    {# review body rendered as submitted #}
+    <div class="review-body">{{ r['body']|safe }}</div>
+  </div>
+  {% else %}
+  <p class="muted">No reviews yet. Be the first to review this product.</p>
+  {% endfor %}
+
+  <form class="reviewform" method="post" action="{{ url_for('market.add_review', pid=p['id']) }}">
+    <h3 style="margin-top:8px">Write a review</h3>
+    <input type="text" name="author" placeholder="Your name" value="{{ user['username'] if user else '' }}">
+    <select name="rating">
+      <option value="5">★★★★★ Excellent</option><option value="4">★★★★ Good</option>
+      <option value="3">★★★ Average</option><option value="2">★★ Poor</option><option value="1">★ Bad</option>
+    </select>
+    <textarea name="body" placeholder="What did you think of this product?" rows="3"></textarea>
+    <button class="btn" type="submit">Submit review</button>
+  </form>
+</section>
+{% endblock %}
